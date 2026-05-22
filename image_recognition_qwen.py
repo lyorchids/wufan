@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 #
 # RobotForAll www.robotforall.net
 #
@@ -19,7 +19,7 @@ class ImageRecognition:
     def __init__(self):
 
         self.client = OpenAI(
-            api_key = "sk-5ae2c72ef21e44df8017017e79c56b8e",
+            api_key = "YOUR_API_KEY",
             base_url = "https://dashscope.aliyuncs.com/compatible-mode/v1",
         )
         

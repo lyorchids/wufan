@@ -3,7 +3,7 @@ import os
 import requests
 import base64
 
-DEEPSEEK_API_KEY = "sk-435bb67e9a1f45038c8391a4f2ce16b6"
+DEEPSEEK_API_KEY = "sk-xxxx"
 
 def call_deepseek_api(img_path, prompt):
     try:
