@@ -14,14 +14,15 @@ photo_taken = False
 
 class ImageRecognition:
     def __init__(self):
-        # ========== 杩欓噷鏀规垚 DeepSeek ==========
+        # ========== 这里改成 DeepSeek ==========
         self.client = OpenAI(
-            api_key = "YOUR_API_KEY",  # 浣犵殑DeepSeek瀵嗛挜
-            base_url = "https://api.deepseek.com",  # 瀹樻柟鍦板潃
+            api_key = "YOUR_API_KEY",  # 你的DeepSeek密钥
+            base_url = "https://api.deepseek.com",  # 官方地址
         )
         
         self.bridge = CvBridge()
-        # 鐩告満璇濋锛堜綘鐜板湪鐢ㄧ瑪璁版湰灏辨敼鎴?/usb_cam/image_raw锛?        self.sub = rospy.Subscriber("/camera/color/image_raw", Image, self.image_callback)
+        # 相机话题（你现在用笔记本就改成 /usb_cam/image_raw）
+        self.sub = rospy.Subscriber("/camera/color/image_raw", Image, self.image_callback)
 
     def image_callback(self, msg):
         try:
@@ -40,7 +41,7 @@ class ImageRecognition:
         with open("photo.png", "rb") as image_file:
             base64_image = base64.b64encode(image_file.read()).decode("utf-8")
         
-        # ========== 妯″瀷鏀规垚 deepseek-chat ==========
+        # ========== 模型改成 deepseek-chat ==========
         completion = self.client.chat.completions.create(
             model="deepseek-chat",
             messages=[
@@ -61,6 +62,6 @@ class ImageRecognition:
         cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    rospy.init_node('image_recognition', anonymous=True)  # 鍔燼nonymous闃叉閲嶅悕
+    rospy.init_node('image_recognition', anonymous=True)  # 加anonymous防止重名
     ImageRecognition()
     rospy.spin()

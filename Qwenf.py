@@ -5,17 +5,17 @@ import pyttsx3
 import os
 import time
 
-# ===================== 閰嶇疆鍖猴紙蹇呴』濉級=====================
-QWEN_API_KEY = "YOUR_API_KEY"  # 鍘婚樋閲屼簯鐧剧偧鑾峰彇
+# ===================== 配置区（必须填）=====================
+QWEN_API_KEY = "YOUR_API_KEY"  # 去阿里云百炼获取
 # ==========================================================
 engine = pyttsx3.init()
 def take_photo():
-    """绗旇鏈憚鍍忓ご鎷嶇収"""
-    print("馃摳 鎵撳紑鎽勫儚澶达紝鎸?S 鎷嶇収锛屾寜 Q 閫€鍑?)
+    """笔记本摄像头拍照"""
+    print("📸 打开摄像头，按 S 拍照，按 Q 退出")
     cap = cv2.VideoCapture(0)
     
     if not cap.isOpened():
-        print("鉂?鎵撲笉寮€鎽勫儚澶?)
+        print("❌ 打不开摄像头")
         return None
 
     img_path = "fresh.jpg"
@@ -23,11 +23,11 @@ def take_photo():
         ret, frame = cap.read()
         if not ret:
             break
-        cv2.imshow("Camera - S鎷嶇収 Q閫€鍑?, frame)
+        cv2.imshow("Camera - S拍照 Q退出", frame)
         k = cv2.waitKey(1) & 0xFF
         if k == ord('s'):
             cv2.imwrite(img_path, frame)
-            print("鉁?鎷嶇収瀹屾垚")
+            print("✅ 拍照完成")
             break
         if k == ord('q'):
             cap.release()
@@ -39,7 +39,7 @@ def take_photo():
     return img_path
 
 def qwen_fresh_analyze(img_path):
-    """閫氫箟鍗冮棶瑙嗚妯″瀷鍒嗘瀽鏋滆敩鏂伴矞搴?""
+    """通义千问视觉模型分析果蔬新鲜度"""
     try:
         with open(img_path, "rb") as f:
             b64 = base64.b64encode(f.read()).decode()
@@ -54,7 +54,7 @@ def qwen_fresh_analyze(img_path):
             "messages": [{
                 "role": "user",
                 "content": [
-                    {"type": "text", "text": "璇峰垎鏋愭灉钄柊椴滃害锛岀粰鍑猴細1.鏂伴矞绛夌骇 2.澶栬鐘舵€?3.鏄惁鍙鐢?4.寤鸿銆傚彛璇寲"},
+                    {"type": "text", "text": "请分析果蔬新鲜度，给出：1.新鲜等级 2.外观状态 3.是否可食用 4.建议。口语化"},
                     {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{b64}"}}
                 ]
             }]
@@ -65,23 +65,23 @@ def qwen_fresh_analyze(img_path):
         if "choices" in j:
             return j["choices"][0]["message"]["content"]
         else:
-            return "鍒嗘瀽澶辫触锛? + str(j)
+            return "分析失败：" + str(j)
     except Exception as e:
-        return "閿欒锛? + str(e)
+        return "错误：" + str(e)
 
 
 
 def main():
-    print("馃崕 閫氫箟鍗冮棶鏋滆敩鏂伴矞搴﹁瘑鍒?)
+    print("🍎 通义千问果蔬新鲜度识别")
     print("="*40)
     
     path = take_photo()
     if not path:
         return
 
-    print("馃攳 姝ｅ湪鍒嗘瀽...")
+    print("🔍 正在分析...")
     res = qwen_fresh_analyze(path)
-    print("\n馃搳 鍒嗘瀽缁撴灉锛?)
+    print("\n📊 分析结果：")
     print(res)
     if res:
         text = res

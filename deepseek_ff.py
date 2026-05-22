@@ -3,7 +3,7 @@ import os
 import requests
 import base64
 
-DEEPSEEK_API_KEY = "sk-xxxx"
+DEEPSEEK_API_KEY = "YOUR_API_KEY"
 
 def call_deepseek_api(img_path, prompt):
     try:
@@ -11,7 +11,7 @@ def call_deepseek_api(img_path, prompt):
         with open(img_path, "rb") as f:
             img_base64 = base64.b64encode(f.read()).decode("utf-8")
 
-        url = "ttps://dashscope.aliyuncs.com/compatible-mode/v1"
+        url = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions"
         headers = {
             "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
             "Content-Type": "application/json"
